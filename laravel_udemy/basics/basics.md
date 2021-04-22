@@ -1,3 +1,8 @@
+### Create a new laravel project in MAMP/htdocs folder
+`cd /Applications/MAMP/htdocs`  
+`laravel new ProjectName`  
+Or `composer create-project laravel/laravel ProjectName --prefer-dist`  
+
 ### Structures
 Folder `App` for `Models` and `Controllers`   
 Folder `Config`->`database.php` to connect database, `mail.php` for if you want to use   mail
