@@ -8,12 +8,12 @@
 `npm install`  
 `npm run dev`  
 
-> Go to `welcome.blade.php`, delete all the <style> and all the contents in <body>, replace by 
+> Go to `welcome.blade.php`, delete all the `<style>` and all the contents in `<body>`, replace by 
 ```html
 <div id="app"></div>
 ```
 
-- Add in `welcome.blade.php` under font <link>:  
+- Add in `welcome.blade.php` under font `<link>`:  
 ```html
 <script src="{{ asset('js/app.js') }}" defer></script>
 ```
@@ -76,22 +76,22 @@ const app = new Vue({
 - import and use `VueRouter` in `app.js`, so in every component, we can access to router with `$` sign.
 - See `/#/` added in url, it's working the router!
 
-- In `welcome.blade.php`, add <router-view> in <div id="app">
+- In `welcome.blade.php`, add `<router-view>` in `<div id="app">`
 > Now you see the example component in url   
 
 ### Component registration
 `Vue.component('my-component-name', { /* ... */ })`  
 > Register in `app.js` globally the components, so you can use them anywhere you want.
-> Each component must have only one main root element <div>.  
+> Each component must have only one main root element `<div>`.  
 - Add a main component `index.vue` in `js` folder.  
-- Remove the <router-view> element from `welcome.blade.php` to the template of `index.vue`, and replace it by <index> component.    
+- Remove the `<router-view>` element from `welcome.blade.php` to the template of `index.vue`, and replace it by `<index>` component.    
 > This main component is very usefull because it can put header and footer, or any data you want there.  
 > So now we can put all the components in `routes.js`.   
 
-- Add <router-link> in `index.vue` to avoid reload when change page.
-- Add <router-link to="/page"> to point to the HTML page.
+- Add `<router-link>` in `index.vue` to avoid reload when change page.
+- Add `<router-link to="/page">` to point to the HTML page.
 - Create a new component called `Component2` after `ExampleComponent`, import & register it in both `app.js` and `routes.js`.
-- Now add this new component as <router-link to="/second"> to `index.vue`, and try in url.
+- Now add this new component as `<router-link to="/second">` to `index.vue`, and try in url.
 > Different component is rendered when you click the links.   
 
 ### Using Bootstrap to style the page
@@ -108,23 +108,23 @@ const app = new Vue({
 - `<router-link :to="{name:'Second'}">Second</router-link>`   
 
 ### Style the router-link, using a navbar
-- Add a <nav> element in `index.vue`, put all the <router-link> inside, and put <router-view> inside a new <div> with style classes of bootstrap.
+- Add a `<nav>` element in `index.vue`, put all the `<router-link>` inside, and put `<router-view>` inside a new `<div>` with style classes of bootstrap.
 
 ### What is single file Vue components
-> Normally a component has 3 parts, <template> <script> and <style> , so one file to specify what to render, how to style the template.
+> Normally a component has 3 parts, `<template>` `<script>` and `<style>` , so one file to specify what to render, how to style the template.
 
 ### Child components
 > Keep a logic in organising components, a `Bookable` component and `BookableListItem` in `bookable` folder.
 > Register the child component only in the parent component, not globally.
-- First add `<bookable-list-item>` in the <template>.
-- Then import the component in <script>, and add in the list of `export default`->`components` object.
-> Using kebab-case for component in <template> is better so it's valid directly in the DOM.   
+- First add `<bookable-list-item>` in the `<template>`.
+- Then import the component in `<script>`, and add in the list of `export default`->`components` object.
+> Using kebab-case for component in `<template>` is better so it's valid directly in the DOM.   
 
 ### Pass property to child components
 > What is `props` ? 
 > It's an array of strings or an object contains names and types(String, Number, Boolean, Array, Object, function, Promise), which would be used as keys to pass values in parent component.
 - Define some `props` in child component, like `props: ['title', 'content']`.
-- Render these `props` in the <template> using double curly brackets `{{ props data }}`.
+- Render these `props` in the `<template>` using double curly brackets `{{ props data }}`.
 > So these names now is becoming variables, in parent component you can define their values freely in where the variables are.
 > There is another way to pass variables in the HTML elements.
 > If these variables are written in camelCase, they should be used as kebab-case in the parent component.
@@ -185,7 +185,7 @@ data(){
 },
 ```
 - These data can be read by `created()` as ex, `console.log(this.bookable1);`. 
-- Bind them in the <template>, ex, `:title="bookable1.title"`.
+- Bind them in the `<template>`, ex, `:title="bookable1.title"`.
 
 ### See how data changes 
 - In `Bookables`:
@@ -203,9 +203,9 @@ created(){
 > Never change `props` data in child component, it will be lost.
 
 ### Render data under condition
-> Because in <template>, when the initial data is null, we read immediately all the object properties before the data is been loaded, so it gives an error.
+> Because in `<template>`, when the initial data is null, we read immediately all the object properties before the data is been loaded, so it gives an error.
 > To avoid this, use `v-if` in HTML element to tell that only render the child component after certain condition is met.
-- Add `v-if="bookable1 !== null"` in the child component element <bookable-list-item>. 
+- Add `v-if="bookable1 !== null"` in the child component element `<bookable-list-item>`. 
 - Make sure `npm run watch` is running, and you see no error in dev tool.
 - In javascript, if somthing is `null`, it returns `false`, so just use `v-if="bookable1"` is enough.
 
@@ -220,8 +220,8 @@ created(){
 > Using `v-if` and `v-else` to wrap the loading and not loading condition.
 
 ### Computed properties
-- Style the child component as a <card> using Bootstrap.
-- Using `Math.ceil(totalItems / numberOfColumnsForEachRow)` to calculate how many rows we will need for <card> in Bootstrap.
+- Style the child component as a `<card>` using Bootstrap.
+- Using `Math.ceil(totalItems / numberOfColumnsForEachRow)` to calculate how many rows we will need for `<card>` in Bootstrap.
 > How to know how many items/data we have in the database? 
 - Define `columns: 3` in the `data()` property. 
 - Using `this.bookables.length` to know how many items in the database.
@@ -237,7 +237,7 @@ computed:{
 
 ### Component `methods`
 - `array.prototype.slice()`, slice cuts an array and returns a portion of the array. slice(from which one(count from 0), until but not include which one).
-- We want to render these items of <card> in rows.
+- We want to render these items of `<card>` in rows.
 - To avoid duplicate key error, add a string before it: `:key="'row'+row"`.
 - Data `bookables` is an array, from 0 to 6, total 7, but the row of CSS is starting by 1, and total is 3.
 - `bookables.slice((row-1) * columns, row * columns )` start from 0, multiple by the amount of items in a column, to the amount of items in a row.
@@ -247,12 +247,12 @@ computed:{
   </div>
 </div>
 ```
-- This means for the <div class="row">, it loop through from 1 to 3, because we need 3 rows.
-- Then in the <div class="col">, it loop through all the items in the data array, and slice(0, 3), then (3, 6), then (6, 9) even we have only 7 items.
-> It's a loop inside another loop, <col> inside <row>.
-- Now the last item took all the <col> in the <row>, how to solve it?
+- This means for the `<div class="row">`, it loop through from 1 to 3, because we need 3 rows.
+- Then in the `<div class="col">`, it loop through all the items in the data array, and slice(0, 3), then (3, 6), then (6, 9) even we have only 7 items.
+> It's a loop inside another loop, `<col>` inside `<row>`.
+- Now the last item took all the `<col>` in the `<row>`, how to solve it?
 - We need to know which item is the last one, by using `method()` object.
-- Calculate in `methods` how many placeholder <card> for the last row: 
+- Calculate in `methods` how many placeholder `<card>` for the last row: 
 ```js
 methods: {
   bookablesInRow(row) {
@@ -264,7 +264,7 @@ methods: {
   }
 },
 ```
-- Create 2 <div class="col"> in <card> which are empty in the last <row>.
+- Create 2 `<div class="col">` in `<card>` which are empty in the last `<row>`.
 ```html
 <div class="col" v-for="p in placeholderInRow(row)" :key="'placeholder' + p"></div>
 ```
