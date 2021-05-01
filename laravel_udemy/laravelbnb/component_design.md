@@ -144,7 +144,7 @@ hasAvailability() {
     return 200 === this.status
 },
 noAvailability() {
-    return 40 === this.status
+    return 404 === this.status
 }
 ```
 #### How to display an error? 
