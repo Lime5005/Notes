@@ -33,8 +33,21 @@ $table->foreign('bookable_id')->references('id')->on('bookables');
 - Add an invokable controller and a route to get all the reviews of one specific bookable.
 - Try the route in Postman for id=1, see if it returns all the reviews.
 - See all the data in Postman, all the review ids are returned, we should hide them, how?
-> By using resource, make a resource and find it in folder `Resources`, retrain what should be returned, then integrate it in the controller.
+> By using resource, make a resource and find it in folder `Resources`, restrain what should be returned, then integrate it in the controller.
 - `php artisan make:resource BookableReviewIndexResource`.
+```php
+return [
+    'created_at' => $this->created_at,
+    'rating' => $this->rating,
+    'content' => $this->content
+];
+```
+```php
+$bookable = Bookable::findOrFail($id);
+return BookableReviewIndexResource::collection(
+    $bookable->reviews()->latest()->get()
+); // It's an array named "data"
+```
 - Now try again in `Postman` to see the update.
 
 ### Pass the data from database to vue
@@ -45,10 +58,3 @@ $table->foreign('bookable_id')->references('id')->on('bookables');
 - Change the static values by `reviews` fetched from database, using `v-for` to loop through, and `{{ each_review_data }}` in template.
 - For user friendly, change `created_at` to "how long ago" format, using [momentjs](https://momentjs.com/), and use filters function to pass to the template as `{{ review.created_at | fromNow }}`. 
 - Register this filter globally in `app.js` so we can re-use it later.
-
-### Design a component and pass data for rating stars
-- Use Fontawesome star, run `npm install --save @fortawesome/fontawesome-free`.
-- Create a new folder called "shared" for all the components that can be re-used.
-
-### Create a component for review input
-- The star rating component can be re-used in this component for user's to vote.
