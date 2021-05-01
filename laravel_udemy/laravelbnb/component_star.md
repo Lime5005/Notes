@@ -22,7 +22,7 @@ numbers.forEach(n => {
 - Bind the `props` in parent component, `<star-rating :rating="review.rating"></star-rating>`  （变量捆绑：左子右父）
 
 #### How to insert half star?
-- If the fraction is small than 0.4, return true, else return false.
+- If the fraction is bigger than 0, smaller than 0.5, return true, else return false.
 ```js
 halfStar() {
   // return false // rating = 3.4, so return true
