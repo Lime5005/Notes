@@ -39,8 +39,125 @@
 - Using the `uuid` to fetch the `created_at` data in the table `reviews`, if it exists, then tell the user it's reviewed and we should hide the input form.
 
 ### Reflex the logic to `Review` component
-- In `created()` lifecycle, using axios to get a response from the url, if has response, means we should return false and hide the input form, else we show the form.
+- In `created()` lifecycle, using axios to get a response from the url, if has response, means we should return true and hide the input form, else we show the form.
 - Using `computed:{}` property to return a data if review existing or it is null.
 - Test in url, paste an id, see dev tools -> Vue, see the computed property, false or true.
 > The route in Laravel is `api/reviews/{uuid}`, but the route in Vue component has been defined in path: `/review/:id`, so the url in Postman use Laravel route, the url in the page is Vue route.    
 - It returns 404, if the review doesn't exist, use `v-if` to hide the form and show a message to user.
+
+### Eloquent event, add review_key to bookings table
+- `php artisan make:migration AddReviewkeyToBookingsTable`
+> Let Laravel create a `review_key` automatically once a booking is created, how?   
+> Listen to model events, see details [Eloquent Event](https://laravel.com/docs/8.x/eloquent#events).   
+- Before migrate, add a function in the model `Booking`:
+```php
+use Illuminate\Support\Str;
+public static function boot() {
+    parent::boot();
+    static::creating(function ($booking) {
+        $booking->review_key = Str::uuid();
+    });
+}
+```
+- `php artisan db:seed --class=BookingsTableSeeder`
+
+### How to find the booking by review_key?
+- In model `Booking`, add a function:
+```php
+public static function findByReviewKey(string $reviewkey): ?Booking {
+  return static::where('review_key', $reviewkey)->with('bookable')->get()->first();
+}
+```
+> With the `?Booking`, we ask either the Booking class or null, otherwise if no bookings this query will fail.       
+> Above means where review_key === $reviewkey, with ralations to bookable, and fetch it immediately.   
+- `php artisan make:controller Api/BookingByReviewController --invokable`
+- In controller's invoke function, ask to return either this or that by using `??`: ` return Booking::findByReviewKey($reviewkey) ?? abort(404);`.
+- Add a route and try in Postman.
+> Remember to refer to the URl by run `php artisan route:list` when using Postman.   
+> Now we see all the data, and that's too much for user, restrain the returned data by using resource.     
+> What to return? `from`, `to`, `id`.   
+> Don't afraid to make more resources if needed, one resource handle one specific request.   
+- `php artisan make:resource BookingByReviewShowResource`, in this resource we ask to return only `from`, `to`, and `id` as 'booking_id' from `bookings`.
+- `php artisan make:resource BookingByReviewBookableShowResource`, here we ask to return `id` as 'bookable_id', `title`, `content` from `bookables`.
+- Insert this new resource to the first one:
+```php
+'bookable' => new BookingByReviewBookableShowResource($this->bookable)
+```
+- Use the first resource in controller, so it can return the info that we want the user to see, try the route again in Postman to see the update.
+- Now we can fetch these data with axios in Vue component!
+
+### Promise chaining
+> Understand Promise: when use axios to get a promise, if then `response => {xxx = sss}` instead of `response => xxx = sss`, the promise will stop there and not go down.      
+> Here we want to verify if the user has reviewed the booking, if yes, no further fetch; if not, and only if returns 404, continue fetch the booking to let the user review his booking, and use `{}` also to not return a result to be resolved.    
+> Save the fetched response in the `data()` as 'booking'.   
+```js
+created() {
+  this.loading = true
+  axios.get(`/api/reviews/${this.$route.params.id}`)
+  .then(response => 
+    // 1. Check if it's reviewed already
+    {this.existingReview = response.data.data}) // use {} to set something here, but don't return a promise, so it will not flow down to the last then.
+    // The logic is, once you found a review, it returns nothing.
+  .catch(err => {
+    // 2. If not, fetch a booking by review_key
+    // See `BookingByReviewController` for details, either find data or return 404
+    if(err.response && 
+    err.response.status &&
+    404 === err.response.status) {
+      return axios.get(`/api/booking-by-review/${this.$route.params.id}`).then(
+        response => {
+          this.booking = response.data.data
+        }
+      )
+    }
+  }).then(response => {
+    console.log(this.booking) // Second test, return 'null', means the second fetched data didn't flow down here either.
+    // console.log(response) // First test, return 'undefined', the promise didn't went down here, other wise we'll see the data.
+    this.loading = false})
+},
+```
+- Add more computed data to observe the `data()` properties, ex, `hasReview`, `hasBooking`, and copy an id from `bookings` to test in the url, see if it shows correctly in dev tools -> Vue.
+
+- Show user the booking he has booked, ask him to review if not done yet.
+- If `hasReview:null`, and `hasBooking: true`, show the booking data to user.
+- Use `v-if`, `v-else` to guide user to different pages: review form or has reviewed alert.
+
+### How to save input into database?
+> A new API endpoint for storing a review(validation rules, conplex flow).   
+> So what do we have to save? see `reviews` table, we need uuid, rating, content, bookable_id, booking_id.   
+
+- In ReviewController, add a `store()` function, ask to validate only 'id', 'rating', and 'content'; for the `booking_id` and `bookable_id`, we'll not trust user to fill them.   
+> How to get the two ids above?    
+> By using Eloquent model method    
+> Remember to let Laravel take mass assignment by declaring the $fillable arrays in model `Review.php`.   
+```php
+$review = Review::make($data);
+$review->booking_id = $booking->id;
+$review->bookable_id = $booking->bookable_id;
+$review->save();
+```
+> Why use `make()` instead of `create()`?    
+> In Laravel, 'create' not only create an instance of the model but also save it to database, while 'make' just create an instance, here we want to save it later with other information.   
+- Now add it in the route, try this new endpoint with a POST request in Postman.
+- Copy a `uuid` from 'reviews' to try, then copy a `review_key` from 'bookings' to try again, see if the returned data is what we expected.
+- If success, check the database and refresh the page to see if they are updated with the new input data.
+
+### Using computed properties in CSS to display grid differently according to data
+- `<div :class="[{'col-md-8': twoColumns}, {'col-md-12': oneColumn}]">`, the class will take one value from the array according to computed data.
+```js
+oneColumn() {
+  return !this.loading && this.alreadyReviewed
+},
+twoColumns() {
+  return this.loading || !this.alreadyReviewed
+}
+```
+
+### Error handling
+- Add 'error' in `data()` property, check every flow where there can have errors, catch them by set `this.error = true`
+- For DRY, create a new folder under `shared` as `utils`, with file `response.js` inside.
+- Move all the error logic from `Review.vue` to here, save them in variables and use the variables in components.
+
+### Sending data from vue to server
+- Add `methods` property in `Review.vue`, write a `submit()` function to console.log the response, with axios post API, `/api/reviews, this.review`,  try to fill in the form, and submit, then check in dev tools -> Vue, and go to the bookable page to see the review, it is uploaded!
+- Prevent user from pressing the button 10 times when loading: `:disabled="loading"`.
