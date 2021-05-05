@@ -83,8 +83,9 @@ Bookable::all()->each(function(Bookable $bookable) {
 });
 ```
 > What is Laravel collection? Collection is a class for array in Laravel, so we don't need to rely on array functions itself, here we use the `collect` to put the data in an array and then use it's build-in methods like `all`, `each`, `implode`, etc. 
-- If you run `php artisan migrate:refresh --seed`, you will have an error, since the `refresh` will empty the `bookables` table.   
+- If you run `php artisan migrate:refresh --seed`, you will have an error, since the `refresh` will empty the `bookables` table.     
 - Run `php artisan db:seed --class=BookingsTableSeeder`
+- Or modify in `BookableSeeder`: `Bookable::factory()->count(100)->create();`, then run `php artisan migrate:refresh --seed`.
 > Now you have 1183 bookings in database!   
 
 ### Single action Controller
