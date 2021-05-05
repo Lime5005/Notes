@@ -26,7 +26,7 @@ Vue.use(Vuex)
 - In `app.js`, initialize it as below:
 ```js
 import storeDefinition from "./store"
-const store = Vuex.Store(storeDefinition);
+const store = new Vuex.Store(storeDefinition);
 const app = new Vue({
     el: '#app',
     router,
