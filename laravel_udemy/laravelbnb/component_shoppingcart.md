@@ -25,3 +25,4 @@
   <i class="fas fa-trash-alt"></i>
 </button>
 ```
+- Use `<transition-group name="fade">` to wrap the `v-for` loop, so the list items disapear slower when delete, details [transition_list](https://vuejs.org/v2/guide/transitions.html).
