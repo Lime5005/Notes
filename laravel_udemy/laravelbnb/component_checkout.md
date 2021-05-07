@@ -51,3 +51,37 @@ $data = array_merge($data1, $request->validate([
 - Try in Postman again with the same data, it's not available anymore, success!
 - Try to book 2 hotels in Postman, also success.
 > See all the data returned, do we need all of them for Frontend?    
+
+### Recalculating price for booking
+- Remove the `Carbon` calculation from `BookablePriceController` to `Bookable`, add a new function as `priceFor()`.
+- In `CheckoutController`, use the new function to calculate the price -> find `id` first -> then `priceFor()`.
+- Once we can have each model's object in the same function, we can associate them `$booking->bookable()->associate($bookable);`
+- Test in Postman, with the `associate` method, proving the `id`, we have all the data of that object returned!
+- In `BookingFactory`, add the price, do the same in `BookingsTableSeeder`, then `php artisan migrate:refresh --seed`.
+
+## Frontend
+### Binding form
+- In `Shoppingcart.vue`, we'll use as template what returned as seen from Postman, to the frontend, we create a `data()` property to receive the input data, then match with backend to transfer the data.
+- Create a `customer` object and set all the customer's info (seen as `address` in Postman) as `null`, then use `v-model` to bind these info to the vue template `input` field.
+- Refresh the page, see in dev tools -> Vue -> Component -> Shoppingcart, the input info is keep updating with our typing, so we can get the customer's info now!
+- For the bookings array, we've recorded in the store state, so now we can use axios to make a `POST` request.
+> So next step, submit these info to backend once the user clicked `Book Now`!
+
+### Handling user entry error in book method
+- Add a method `book()` to control the input, at the same time of submit.
+- For the `type="submit"` button, remember to add `prevent` as `@click.prevent="method"`.
+
+### Reuse a mixin
+- In mixins, we have a `validationErrors` function, we can use it here.
+- Import it, then put in `export default mixins`, this function will add a `errors` data, and check which input field has errors.
+- Refresh the page, see in Vue, if the `errors` is added.
+- Use `async/await` to post the request, if you forgot the request format, check in Postman again: our input is an object contains `"bookings"` as an array, and `"customer"` as an object.
+> For javascript to return an arrow function with multiples data, include data in `()` after the arrow `=>`.   
+```js
+bookings: this.shoppingcart.map(itemsInShoppingcart => ({
+  bookable_id: itemsInShoppingcart.bookable.id,
+  from: itemsInShoppingcart.dates.from,
+  to: itemsInShoppingcart.dates.to
+}))
+```
+- Now refresh the page and try as a user to post a request, see in Network, Header, status 200, Preview for name 'checkout', data as expected, success!
