@@ -1,21 +1,21 @@
-First, `make:model Product`  
-Then, `make: ProductController`  
-And, `$fillable` all the infos `‘name’, ‘price’, ‘description’, ‘slug’`  
-Give all the CRUD functions  
-Test in `Postman`, all the functions `GET, POST, PUT, DELETE, search`  
+- First, `make:model Product`  
+- Then, `make: ProductController`  
+- And, `$fillable` all the infos `‘name’, ‘price’, ‘description’, ‘slug’`  
+- Give all the CRUD functions  
+- Test in `Postman`, all the functions `GET, POST, PUT, DELETE, search`  
 
 1. `composer require laravel/sanctum`  
-See `composer.json` if the `sanctum` is installed  
+- See `composer.json` if the `sanctum` is installed  
 
 2. Migrate
-`php artisan vendor:publish --provider="Laravel\Sanctum\SanctumServiceProvider"`  
-See `database`-> `migrations`->`create_personal_accsess_tokens`  
+- `php artisan vendor:publish --provider="Laravel\Sanctum\SanctumServiceProvider"`  
+- See `database`-> `migrations`->`create_personal_accsess_tokens`  
 
 3. `php artisan migrate`
-add in the database, see DB browser for SQLite  
+- add in the database, see DB browser for SQLite  
 
 4. Add in `Kernal.php` file
-Find the `api` line, and replace them by  
+- Find the `api` line, and replace them by  
 ```php
 'api' => [
     \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
@@ -41,17 +41,17 @@ Route::group(['middleware' => ['auth:sanctum']], function(){
 ```
 
 7. Test in `Postman`
-`Header`-> `accept, application/json`  
-`GET http://127.0.0.1:8000/api/products/search/iphone`  
-See  `"message": "Unauthenticated."`  
-Test success!  
+- `Header`-> `accept, application/json`  
+- `GET http://127.0.0.1:8000/api/products/search/iphone`  
+- See  `"message": "Unauthenticated."`  
+- Test success!  
 
-> Now you can decide which routes you want to protect by sanctum
-> And move them to the group, such as ‘post’, ‘put’, ‘delete’, only authenticated user can have access.
+> Now you can decide which routes you want to protect by sanctum   
+> And move them to the group, such as ‘post’, ‘put’, ‘delete’, only authenticated user can have access.   
 
 ### Go to make a user controller
- `php artisan make:controller AuthController`  
-See in `Http` -> `Controllers` -> `AuthController`  
+- `php artisan make:controller AuthController`  
+- See in `Http` -> `Controllers` -> `AuthController`  
 1. Add below:
 ```php
 use App\Models\User;
@@ -90,13 +90,13 @@ Route::post('/register', [AuthController::class, 'register']);
 ```
 
 3. Test in `Postman`
-Add `name`, `email`, `password`, `password_confirmation`, `header` : `accept app/json`, and use `POST`, it gives a token, success!
+- Add `name`, `email`, `password`, `password_confirmation`, `header` : `accept app/json`, and use `POST`, it gives a token, success!
 
 4. Test to use this token to post a new product in `Postman`
-Copy it to `Authorisation`, choose Type `Bearer token`, and change the infos(`name`, `price`, ect.) in `Body`, use `POST`,  success!
+- Copy it to `Authorisation`, choose Type `Bearer token`, and change the infos(`name`, `price`, ect.) in `Body`, use `POST`,  success!
 
 > Destroy the token once user logout:
-Go to `AuthController.php` -> add a function as below:
+- Go to `AuthController.php` -> add a function as below:
 ```php
 public function logout(Request $request){
     auth()->user()->tokens()->delete();
@@ -108,11 +108,11 @@ public function logout(Request $request){
 ```
 
 5. Create a route in the protected routes group to logout in `api.php`:
-`Route::post('/logout', [AuthController::class, 'logout']);`
+- `Route::post('/logout', [AuthController::class, 'logout']);`
 
 6. Try to logout without token in `Postman`, `"message": "Unauthenticated."`  
-Try to use the token to logout, success! `"message": "Logged out"`  
-Try to post a product without the token, `"message": "Unauthenticated." ` All right!  
+- Try to use the token to logout, success! `"message": "Logged out"`  
+- Try to post a product without the token, `"message": "Unauthenticated." ` All right!  
 
 7. Create a login function in `AuthController.php`
 ```php
@@ -145,6 +145,6 @@ public function login(Request $request) {
 ```
 
 8. Add a route to public routes  
-`Route::post('/login', [AuthController::class, 'login']);`
+- `Route::post('/login', [AuthController::class, 'login']);`
 
 9. Now test to login in `Postman`, with the email and password, it works!
