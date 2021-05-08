@@ -85,3 +85,37 @@ bookings: this.shoppingcart.map(itemsInShoppingcart => ({
 }))
 ```
 - Now refresh the page and try as a user to post a request, see in Network, Header, status 200, Preview for name 'checkout', data as expected, success!
+
+### Logic about the checkout
+> Once the user successfully booked the hotels, he should not see the form and see the shoppingcart empty, then a confirmation message.   
+> If the user didn't fill in enough info, he should see some error messages.   
+- In `Shoppingcart`, we have a computed `...mapGetters(['itemsInShoppingcart']),`, use `v-if`, `v-else` to show/hide the customer form when has items/no items in the cart.   
+- See in `store.js`, we have a state `shoppingcart` as an object contains arrays, if the user booked the hotels, the state should be mutated to 0.
+- Add an action `clearShoppingcart` to trigger a mutation of the state, do we already have a mutation?   
+- Yes, the `setShoppingcart`, we can set to 0.   
+> So what do we need to do as "side effect", (payload of the action)?    
+> Re-set the localStorage items as an empty array.             
+- Insert this action in the method `book()`.
+- Refresh the page and try to book to see the updates.
+- See Vuex -> mutations, the `setShoppingcart` has been triggered, and items set to an empty array; and in Application -> localStorage, item is 0.
+
+### Watch errors, how do they displayed?
+- Click `Book Now` button without fill in any info, dev tools -> Vue -> Component -> `Shoppingcart` -> `errors`, it's an object of arrays all have given an error message like "The customer.city field is required."
+- See in `Availability`, we have used the error message there, copy and paste here to all the input field, change the field name.
+> Important, make sure once the user correct one field, the error should not appear again when he clicks again the `Book Now` button, how?      
+- Add `this.errors = null` at the beginning of the method `book()`.
+
+### Show a success message to confirm the booking
+- We have a `Success` component, reuse it here.
+> How to reuse it?   
+> We need to check first, if it's not loading, if the items in cart is 0, and if the user really booked a hotel.        
+- Use a computed property `success()` to define these logic above, then use `v-if` `v-else` to show/hide the message.
+```js
+success() {
+  return !this.loading && 0 === this.itemsInShoppingcart && this.bookingAttempted
+}
+```
+> Here, the `itemsInShoppingcart` is from mapGetters, it's in `computed`, not from `data()`.     
+> The `bookingAttempted` is a new `data()` property, set to `false` at the beginning of `book()`, then in the end set to `true`, so if the user emptied the shopping cart, he will just see empty form, only the user who has booked successfully will see the success message.         
+> `Computed` property is like `data()` property, use prefix `this` to use them anywhere in the script.     
+> Remember to refresh the page everytime when the vue component data is modified before the test.       
