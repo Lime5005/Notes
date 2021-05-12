@@ -107,3 +107,13 @@ fs.writeFile('message.txt', data, err => {
 - Close callbacks.
 - `process.exit` if `refs == 0`
 
+### Create a routes file
+- Move all the `if url=xxx` logic to the `routes.js`.
+- Create a `const requestHandler` to store the routes inside.
+- Export the `routes.js` to `app.js`, one ways:
+> By adding in the end `module.exports = requestHandler`   
+> Then in `app.js`, add `const routes = require('./routes')`   
+> Use the `routes` as an arg in `createServer(routes)`.
+- Test again the new code.
+> Or if you have multiples data to export, export it explicitly:   
+> `module.exports.handler = requestHandler`, then use it as `routes.handler` in `app.js`   
