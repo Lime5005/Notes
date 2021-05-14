@@ -18,7 +18,7 @@ const requestHandler = (req, res) => {
         })
         return req.on('end', () => {
             const parsedBody = Buffer.concat(body).toString()
-            const data = parsedBody.split('=')[1]
+            const data = parsedBody.split('=')[0]
             fs.writeFile('message.txt', data, err => {
                 res.statusCode = 302
                 res.setHeader('Location', '/')
@@ -34,4 +34,6 @@ const requestHandler = (req, res) => {
     res.end()
 }
 
-module.exports = requestHandler
+// module.exports = requestHandler
+// Or if you have multiples data to export:
+module.exports.handler = requestHandler
