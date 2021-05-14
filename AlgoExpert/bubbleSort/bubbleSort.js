@@ -23,7 +23,7 @@ function swap(i, y, array) {
     array[y] = temp
 }
 
-// Compare from left one to right one, one by one, and swap their places, if in the end the sort is not finished, isSorted is still false, so re-start the loop.
+// Compare from left one to right one, one by one, and swap their places, if the "if" condition continues, isSorted is still false, so re-start the loop.
 // (i < array.length - 1), the left one is always 1 less than the right one, the pointer i is the left one.
-// Each time the loop will push the biggest integer in the end of the array, so (array.length - 1 - counter), it's out of the loop.
-// Bubble sort doesn't use a helper array, but swap in itself.
+// (array.length - 1 - counter), each time the loop will push the biggest integer in the end of the array, so, it's out of the loop, then more and more integers will not be counted in the loop.
+// Bubble sort doesn't use a helper array, but swap inside itself.
