@@ -41,3 +41,14 @@ fs.writeFile(p, JSON.stringify(products), err => {
 ### Helper for store data
 - Create a reusable callback function in `product.js`: `getProductFromFile`, so the code is slimmer.
 > Conclude a logic that has been used by both functions: `save()` and `fetchAll()`, grab it out from them, and then re-use it inside.      
+
+
+### Adding more features for MVC
+- Divide the logic into 2 parts: admin and shop in controllers. 资源整合
+- Add router links for different routes in navigation, add `ejs` pages.
+- Test these pages, and add product to see if they render correctly.
+- The products need more properties: `title`, `imageUrl`, `price`, `description`.
+> To pass numbers as float type in HTML input, use `step="0.01"`.      
+> For admin to edit and delete:    
+> How to add dynamic data, ex, product id to the route for admin?   
+> Use `:id`, ex, `router.get('/products/:productId', shopController.getProduct)`.   
