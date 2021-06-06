@@ -1,3 +1,5 @@
+package sortedSquaredArray;
+
 import java.util.*;
 class Program {
 
