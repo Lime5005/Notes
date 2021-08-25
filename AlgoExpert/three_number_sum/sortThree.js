@@ -15,7 +15,7 @@ function threeNumberSum(array, targetSum) {
             if (sum === targetSum) {
                 triplets.push([array[i], array[left], array[right]]);
                 left++;
-                right--;
+                right--; //不多不少的情况下，两个指针要同时移动看下一个可能，不然不是多就是少了。
             } else if (sum < targetSum) { // -1 < 0, need a bigger number from left.
                 left++; //Move the pointer to right.
             } else { // 2 > 0, need a smaller number from right.
