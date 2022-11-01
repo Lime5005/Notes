@@ -20,6 +20,7 @@ class Solution {
       for (var meeting : intervals) {
           heap.offer(meeting);
           //peek(): retrieve the head one
+          //If the first meeting has ended before or by the time the next meeting at `start_pointer` starts, then it's ok, no need to add a room.
           if (heap.peek()[1] <= meeting[0]) {
               //poll(): retrieve the head one and remove it
               heap.poll();
