@@ -31,7 +31,7 @@ public class PermutationInString {
       //2.2, Window size is s1's length
       for (int j = 0; j < s1.length(); j++) {
         //2.3, Put the contents into the window one by one
-        for (int j = 0; j < s1.length(); j++) {
+
         sMap2.put(s2.charAt(i + j), sMap2.getOrDefault(s2.charAt(i + j), 0) + 1);
         //i+j=0+0; i+j=0+1; i+j=0+2; //0, 1, 2   ==> (c, 1), (d, 2)
         //i+j=1+0; i+j=1+1; i+j=1+2; //1, 2, 3   ==> (a, 1), (c, 1), (d, 1)
