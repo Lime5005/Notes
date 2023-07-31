@@ -22,3 +22,19 @@ console.log(lengthOfLongestSubstring("abcabcbb")); // 3
 console.log(lengthOfLongestSubstring("bbbbb")); // 1
 console.log(lengthOfLongestSubstring("pwwkew")); // 3
 console.log(lengthOfLongestSubstring("wsslpluuwekuaxt")); // 7
+// why "wsslpluuwekuaxt" is 7 ? set will remove the first duplicate element
+// first round [w]
+// second round [w, s]
+// third round [s, s] -> [s]
+// fourth round [s, l]
+// fifth round [s, l, p]
+// sixth round [s, l, p, l] -> [p, l] -> remove the first index + set delete duplicate automatically
+// [p, l, u]
+// [p, l, u, u] -> [l, u]
+// [l, u, w]
+// [l, u, w, e]
+// [l, u, w, e, k]
+// [l, u, w, e, k, u] -> [w, e, k, u]
+// [w, e, k, u, a]
+// [w, e, k, u, a, x]
+// last round [w, e, k, u, a, x, t]
